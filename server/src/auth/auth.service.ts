@@ -16,6 +16,7 @@ export class AuthService {
   ) { }
 
   async register(registerDto: RegisterDto) {
+    console.log(registerDto);
     const existingUser = await this.usersRepository.findOne({
       where: [
         { username: registerDto.username },

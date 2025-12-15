@@ -4,9 +4,10 @@ import { MurmursService } from './murmurs.service';
 import { MurmursController } from './murmurs.controller';
 import { Murmur } from './entities/murmur.entity';
 import { Like } from './entities/like.entity';
+import { Follow } from '../users/entities/follow.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Murmur, Like])],
+  imports: [TypeOrmModule.forFeature([Murmur, Like, Follow])],
   controllers: [MurmursController],
   providers: [MurmursService],
   exports: [MurmursService],

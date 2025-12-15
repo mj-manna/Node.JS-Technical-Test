@@ -29,10 +29,10 @@ import { AuthModule } from './auth/auth.module';
       host: process.env.DB_HOST || 'localhost',
       port: parseInt(process.env.DB_PORT) || 3306,
       username: process.env.DB_USER || 'docker',
-      password: process.env.DB_PASSWORD || 'docker',
+      password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'technical_test_app',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, // Use migrations in production
+      synchronize: true,
     }),
     AuthModule,
     UsersModule,
