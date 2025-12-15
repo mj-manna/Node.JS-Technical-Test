@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import cors from 'cors';
+// import cors from 'cors';
 import { ValidationPipe } from '@nestjs/common';
 
 
@@ -10,7 +10,8 @@ async function bootstrap() {
 
   // ミドルウェアの設定
   app.use(helmet());
-  app.use(cors());
+  // app.use(cors());
+  app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

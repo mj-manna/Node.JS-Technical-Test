@@ -1,16 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Murmur } from './murmur.entity';
 
 @Entity('likes')
 export class Like {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'user_id' })
+  @PrimaryColumn({ name: 'user_id' })
   userId: number;
 
-  @Column({ name: 'murmur_id' })
+  @PrimaryColumn({ name: 'murmur_id' })
   murmurId: number;
 
   @CreateDateColumn({ name: 'created_at' })
