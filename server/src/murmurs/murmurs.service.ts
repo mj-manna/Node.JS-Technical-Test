@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Murmur } from './entities/murmur.entity';
 import { Like } from './entities/like.entity';
+import { Follow } from '../users/entities/follow.entity';
 import { CreateMurmurDto } from './dto/create-murmur.dto';
 
 @Injectable()
@@ -12,6 +13,8 @@ export class MurmursService {
     private murmursRepository: Repository<Murmur>,
     @InjectRepository(Like)
     private likesRepository: Repository<Like>,
+    @InjectRepository(Follow)
+    private followsRepository: Repository<Follow>,
   ) { }
 
   async findAll(page: number = 1, limit: number = 10) {
@@ -119,17 +122,24 @@ export class MurmursService {
   async getTimeline(userId: number, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
 
-    const query = this.murmursRepository
-      .createQueryBuilder('murmur')
-      .leftJoinAndSelect('murmur.user', 'user')
-      .leftJoin('follows', 'follow', 'follow.following_id = murmur.user_id')
-      .where('follow.follower_id = :userId', { userId })
-      .orWhere('murmur.user_id = :userId', { userId })
-      .orderBy('murmur.created_at', 'DESC')
-      .skip(skip)
-      .take(limit);
+    // Get the list of users being followed
+    const follows = await this.followsRepository.find({
+      where: { followerId: userId },
+      select: ['followingId'],
+    });
 
-    const [murmurs, total] = await query.getManyAndCount();
+    const followingIds = follows.map(f => f.followingId);
+
+    // Include the user's own ID to show their own murmurs
+    const userIds = [...followingIds, userId];
+
+    const [murmurs, total] = await this.murmursRepository.findAndCount({
+      where: { userId: In(userIds) },
+      relations: ['user'],
+      order: { createdAt: 'DESC' },
+      skip,
+      take: limit,
+    });
 
     return {
       data: murmurs,
