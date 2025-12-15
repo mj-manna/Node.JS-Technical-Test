@@ -18,10 +18,12 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const murmur_entity_1 = require("./entities/murmur.entity");
 const like_entity_1 = require("./entities/like.entity");
+const follow_entity_1 = require("../users/entities/follow.entity");
 let MurmursService = class MurmursService {
-    constructor(murmursRepository, likesRepository) {
+    constructor(murmursRepository, likesRepository, followsRepository) {
         this.murmursRepository = murmursRepository;
         this.likesRepository = likesRepository;
+        this.followsRepository = followsRepository;
     }
     async findAll(page = 1, limit = 10) {
         const skip = (page - 1) * limit;
@@ -103,16 +105,19 @@ let MurmursService = class MurmursService {
     }
     async getTimeline(userId, page = 1, limit = 10) {
         const skip = (page - 1) * limit;
-        const query = this.murmursRepository
-            .createQueryBuilder('murmur')
-            .leftJoinAndSelect('murmur.user', 'user')
-            .leftJoin('follows', 'follow', 'follow.following_id = murmur.user_id')
-            .where('follow.follower_id = :userId', { userId })
-            .orWhere('murmur.user_id = :userId', { userId })
-            .orderBy('murmur.created_at', 'DESC')
-            .skip(skip)
-            .take(limit);
-        const [murmurs, total] = await query.getManyAndCount();
+        const follows = await this.followsRepository.find({
+            where: { followerId: userId },
+            select: ['followingId'],
+        });
+        const followingIds = follows.map(f => f.followingId);
+        const userIds = [...followingIds, userId];
+        const [murmurs, total] = await this.murmursRepository.findAndCount({
+            where: { userId: (0, typeorm_2.In)(userIds) },
+            relations: ['user'],
+            order: { createdAt: 'DESC' },
+            skip,
+            take: limit,
+        });
         return {
             data: murmurs,
             meta: {
@@ -129,7 +134,9 @@ exports.MurmursService = MurmursService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(murmur_entity_1.Murmur)),
     __param(1, (0, typeorm_1.InjectRepository)(like_entity_1.Like)),
+    __param(2, (0, typeorm_1.InjectRepository)(follow_entity_1.Follow)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository])
 ], MurmursService);
 //# sourceMappingURL=murmurs.service.js.map

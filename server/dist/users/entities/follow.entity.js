@@ -16,15 +16,11 @@ let Follow = class Follow {
 };
 exports.Follow = Follow;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], Follow.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'follower_id' }),
+    (0, typeorm_1.PrimaryColumn)({ name: 'follower_id' }),
     __metadata("design:type", Number)
 ], Follow.prototype, "followerId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'following_id' }),
+    (0, typeorm_1.PrimaryColumn)({ name: 'following_id' }),
     __metadata("design:type", Number)
 ], Follow.prototype, "followingId", void 0);
 __decorate([

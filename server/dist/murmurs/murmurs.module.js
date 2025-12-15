@@ -13,12 +13,13 @@ const murmurs_service_1 = require("./murmurs.service");
 const murmurs_controller_1 = require("./murmurs.controller");
 const murmur_entity_1 = require("./entities/murmur.entity");
 const like_entity_1 = require("./entities/like.entity");
+const follow_entity_1 = require("../users/entities/follow.entity");
 let MurmursModule = class MurmursModule {
 };
 exports.MurmursModule = MurmursModule;
 exports.MurmursModule = MurmursModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([murmur_entity_1.Murmur, like_entity_1.Like])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([murmur_entity_1.Murmur, like_entity_1.Like, follow_entity_1.Follow])],
         controllers: [murmurs_controller_1.MurmursController],
         providers: [murmurs_service_1.MurmursService],
         exports: [murmurs_service_1.MurmursService],

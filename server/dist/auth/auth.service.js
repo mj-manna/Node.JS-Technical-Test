@@ -25,6 +25,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async register(registerDto) {
+        console.log(registerDto);
         const existingUser = await this.usersRepository.findOne({
             where: [
                 { username: registerDto.username },

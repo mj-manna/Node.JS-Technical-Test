@@ -1,11 +1,13 @@
 import { Repository } from 'typeorm';
 import { Murmur } from './entities/murmur.entity';
 import { Like } from './entities/like.entity';
+import { Follow } from '../users/entities/follow.entity';
 import { CreateMurmurDto } from './dto/create-murmur.dto';
 export declare class MurmursService {
     private murmursRepository;
     private likesRepository;
-    constructor(murmursRepository: Repository<Murmur>, likesRepository: Repository<Like>);
+    private followsRepository;
+    constructor(murmursRepository: Repository<Murmur>, likesRepository: Repository<Like>, followsRepository: Repository<Follow>);
     findAll(page?: number, limit?: number): Promise<{
         data: Murmur[];
         meta: {

@@ -17,15 +17,11 @@ let Like = class Like {
 };
 exports.Like = Like;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], Like.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'user_id' }),
+    (0, typeorm_1.PrimaryColumn)({ name: 'user_id' }),
     __metadata("design:type", Number)
 ], Like.prototype, "userId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'murmur_id' }),
+    (0, typeorm_1.PrimaryColumn)({ name: 'murmur_id' }),
     __metadata("design:type", Number)
 ], Like.prototype, "murmurId", void 0);
 __decorate([
